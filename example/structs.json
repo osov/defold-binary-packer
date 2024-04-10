@@ -1,0 +1,48 @@
+[
+  {
+    "struct_id": 1,
+    "struct": [
+      {
+        "key": "x",
+        "data_id": -1
+      },
+      {
+        "key": "y",
+        "data_id": -1
+      }
+    ]
+  },
+  {
+    "struct_id": 2,
+    "struct": [
+      {
+        "key": "name",
+        "data_id": -10
+      },
+      {
+        "key": "position",
+        "data_id": 1
+      }
+    ]
+  },
+  {
+    "struct_id": 3,
+    "struct": [
+      {
+        "key": "enemies",
+        "data_id": 2,
+        "is_array": true
+      }
+    ]
+  },
+  {
+    "struct_id": 4,
+    "struct": [
+      {
+        "key": "character",
+        "data_id": 2
+      }
+    ]
+  }
+]
+

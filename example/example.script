@@ -1,0 +1,178 @@
+local function put_data(data_type, value)
+    if type(value) == "number" then
+        print(string.format("put value: %.50f", value))
+    elseif type(value) == "table" then
+        pprint("put table:", value)
+    else
+        print(string.format("put value: %s", value))
+    end
+    binarypacker.put_data(data_type, value)
+end
+
+local function test()
+    --local now = socket.gettime()
+    binarypacker.clear_write_buffer()
+    for i = 1, 100 do
+        binarypacker.put_data(1, { x = 12 + i, y = 15 + i })
+    end
+    for i = 1, 100 do
+        binarypacker.put_data(2, { name = string.format("character_%s", i), position = { x = 18 + i, y = 19 + i } })
+    end
+    for n = 1, 100 do
+        local enemies = {}
+        for i = 1, 10 do
+            table.insert(enemies, { name = string.format("orc_%s", i + n * 10), position = { x = 3 + i + n, y = 4 + i + n } })
+        end
+        binarypacker.put_data(3, { enemies = enemies })
+    end
+    for i = 1, 150 do
+        binarypacker.put_data(4, { character = { name = string.format("hero_%s", i), position = { x = 10 + i, y = 11 + i } } })
+    end
+    for i = 1, 200 do
+        binarypacker.put_data(10, { name = string.format("hero_%s", i), weapon = 2 + i, coins = 100 * i })
+    end
+    local buffer = binarypacker.get_write_buffer()
+    --print("time pack:", socket.gettime() - now)
+    --print("buffer len: ", string.len(buffer))
+
+    --for n = 1, 10 do
+    --    local now = socket.gettime()
+    for i = 1, 10 do
+        local result = binarypacker.unpack_buffer(buffer)
+        --pprint(result)
+    end
+    --print("time unpack:", socket.gettime() - now)
+    --end
+end
+
+function init(self)
+    local structs = json.decode(sys.load_resource("/example/structs.json"))
+    pprint(structs)
+    pprint(binarypacker.register_structs(structs))
+    pprint(binarypacker.register_structs({ {
+                                               struct_id = 10,
+                                               struct = {
+                                                   { key = "name", data_id = binarypacker.DATA_STRING },
+                                                   { key = "weapon", data_id = binarypacker.DATA_UINT8 },
+                                                   { key = "coins", data_id = binarypacker.DATA_UINT16 },
+                                               } } }))
+    --print("binarypacker.DATA_INT8", binarypacker.DATA_INT8)
+
+    binarypacker.create_write_buffer(16384)
+    --binarypacker.clear_write_buffer()
+    put_data(binarypacker.DATA_INT8, 55)
+    put_data(binarypacker.DATA_INT8, -123)
+    put_data(binarypacker.DATA_UINT8, 254)
+    put_data(binarypacker.DATA_UINT8, 0)
+    put_data(binarypacker.DATA_INT16, -24647)
+    put_data(binarypacker.DATA_UINT16, 38458)
+    put_data(binarypacker.DATA_INT32, -1989455221)
+    put_data(binarypacker.DATA_UINT32, 2458845545)
+    put_data(binarypacker.DATA_INT64, -8440105816107642705)
+    put_data(binarypacker.DATA_INT64, 8858506068090819672)
+    put_data(binarypacker.DATA_FLOAT32, 25.54421554651244823)
+    put_data(binarypacker.DATA_FLOAT32, -5.21215602345487432)
+    put_data(binarypacker.DATA_FLOAT64, 215.21557878587978412212234567809)
+    put_data(binarypacker.DATA_FLOAT64, -0.321234154723409034095871723477)
+    local str = "my string\0with zero"
+    put_data(binarypacker.DATA_STRING, str)
+    put_data(binarypacker.DATA_INT8, 88)
+    put_data(1, { x = 12, y = 15 })
+    put_data(2, { name = "character", position = { x = 18, y = 19 } })
+    put_data(3, { enemies = {
+        { name = "orc", position = { x = 3, y = 4 } },
+        { name = "dwarf", position = { x = 7, y = 8 } }
+    } })
+    put_data(4, { character = { name = "hero", position = { x = 10, y = 11 } } })
+
+    local buffer = binarypacker.get_write_buffer()
+
+    --print("data len", string.len(data))
+    --for i = 1, string.len(data) do
+    --    local byte = string.byte(data, i, i)
+    --    print(string.format("0x%X - %s - %s", byte, byte, str.char(byte)))
+    --end
+
+    binarypacker.set_read_buffer(buffer)
+    print("get_data byte", binarypacker.get_data(binarypacker.DATA_INT8))
+    print("get_data byte", binarypacker.get_data(binarypacker.DATA_INT8))
+    print("get_data ubyte", binarypacker.get_data(binarypacker.DATA_UINT8))
+    print("get_data ubyte", binarypacker.get_data(binarypacker.DATA_UINT8))
+    print("get_data int16", binarypacker.get_data(binarypacker.DATA_INT16))
+    print("get_data uint16", binarypacker.get_data(binarypacker.DATA_UINT16))
+    print("get_data int32", binarypacker.get_data(binarypacker.DATA_INT32))
+    print("get_data uint32", binarypacker.get_data(binarypacker.DATA_UINT32))
+    print(string.format("get_data int64: %.50f", binarypacker.get_data(binarypacker.DATA_INT64)))
+    print(string.format("get_data int64: %.50f", binarypacker.get_data(binarypacker.DATA_INT64)))
+    print(string.format("get_data float32: %.50f", binarypacker.get_data(binarypacker.DATA_FLOAT32)))
+    print(string.format("get_data float32: %.50f", binarypacker.get_data(binarypacker.DATA_FLOAT32)))
+    print(string.format("get_data float64: %.50f", binarypacker.get_data(binarypacker.DATA_FLOAT64)))
+    print(string.format("get_data float64: %.50f", binarypacker.get_data(binarypacker.DATA_FLOAT64)))
+    local s = binarypacker.get_data(binarypacker.DATA_STRING)
+    pprint(string.format("get_data string: len: %s, %s", str.len(s), s))
+    print("get_data byte", binarypacker.get_data(binarypacker.DATA_INT8))
+    pprint("get_data 1: ", binarypacker.get_data())
+    pprint("get_data 2: ", binarypacker.get_data())
+    pprint("get_data 3: ", binarypacker.get_data())
+    pprint("get_data 4: ", binarypacker.get_data())
+
+    print("clear buffer")
+    binarypacker.clear_write_buffer()
+    put_data(1, { x = 12, y = 15 })
+    put_data(2, { name = "character", position = { x = 18, y = 19 } })
+    put_data(3, { enemies = {
+        { name = "orc", position = { x = 3, y = 4 } },
+        { name = "dwarf", position = { x = 7, y = 8 } }
+    } })
+    put_data(4, { character = { name = "hero", position = { x = 10, y = 11 } } })
+    put_data(10, { name = "hero2", weapon = 2, coins = 100 })
+    --put_data(binarypacker.DATA_INT8, 11)
+    --put_data(binarypacker.DATA_INT16, -11111)
+    --put_data(binarypacker.DATA_INT32, 0)
+    --put_data(binarypacker.DATA_INT64, -100)
+
+    buffer = binarypacker.get_write_buffer()
+    print("data len", string.len(buffer))
+    --for i = 1, string.len(data) do
+    --    local byte = string.byte(data, i, i)
+    --    print(string.format("0x%X - %s - %s", byte, byte, str.char(byte)))
+    --end
+    pprint("unpack", binarypacker.unpack_buffer(buffer))
+    --binarypacker.set_buffer(data)
+    --print("get_data byte", binarypacker.get_data(binarypacker.DATA_INT8))
+    --print("get_data int16", binarypacker.get_data(binarypacker.DATA_INT16))
+    --print("get_data int32", binarypacker.get_data(binarypacker.DATA_INT32))
+    --print("get_data int64", binarypacker.get_data(binarypacker.DATA_INT64))
+
+    --local n = 8858506068090819672
+    --local n = 8858506068090819580
+    local n = 88585060680545044
+    print(string.format("n: %.2f : %.2f", n, n - 10))
+
+    test()
+    profiler.enable_ui(true)
+end
+
+function final(self)
+    -- Add finalization code here
+    -- Remove this function if not needed
+end
+
+function update(self, dt)
+    test()
+end
+
+function on_message(self, message_id, message, sender)
+    -- Add message-handling code here
+    -- Remove this function if not needed
+end
+
+function on_input(self, action_id, action)
+    -- Add input-handling code here
+    -- Remove this function if not needed
+end
+
+function on_reload(self)
+    -- Add reload-handling code here
+    -- Remove this function if not needed
+end
