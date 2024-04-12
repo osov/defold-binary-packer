@@ -181,7 +181,11 @@ namespace dmBinaryPacker {
         while (position < size) {
             int dataId = ParseDataId(buffer, position, size);
             if (dataId >= 0) {
+                lua_newtable(L);
+                lua_pushnumber(L, dataId);
+                lua_setfield(L, -2, messageIdField);
                 ParseDataIntoStack(L, dataId, buffer, position, size);
+                lua_setfield(L, -2, messageField);
                 lua_rawseti(L, -2, index++);
             } else break;
         }

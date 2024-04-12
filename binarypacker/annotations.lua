@@ -7,6 +7,10 @@
 ---@field struct_id number Идентификатор структуры
 ---@field struct binarypacker_struct_info[] Описание структуры
 
+---@class binarypacker_unpacked_buffer
+---@field message_id number
+---@field message table
+
 ---@class binarypacker
 ---@field DATA_INT8 number Тип данных 8 битное число со знаком
 ---@field DATA_UINT8 number Тип данных 8 битное число без знака
@@ -25,7 +29,7 @@
 ---@field get_write_buffer fun():string Получить буфер записи в виде строки
 ---@field set_read_buffer fun(buffer:string) Установить буфер для парсинга
 ---@field get_data fun(data_id:number|nil):any Получить данные из буфера, если data_type == nil, то будет попытка распаковать структуру
----@field unpack_buffer fun(buffer:string):table[] Распаковать буфер данных, функция возвращает массив с данными
+---@field unpack_buffer fun(buffer:string):binarypacker_unpacked_buffer[] Распаковать буфер данных, функция возвращает массив с данными
 
 ---@type binarypacker
 binarypacker = {}

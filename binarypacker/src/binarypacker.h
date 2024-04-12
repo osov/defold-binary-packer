@@ -8,6 +8,8 @@ namespace dmBinaryPacker {
     const char structInfoKeyField[] = "key";
     const char structInfoDataIdField[] = "data_id";
     const char structInfoIsArrayField[] = "is_array";
+    const char messageIdField[] = "message_id";
+    const char messageField[] = "message";
 
     struct structFieldInfo {
         char *key;
