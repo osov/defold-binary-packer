@@ -117,6 +117,7 @@ namespace dmBinaryPacker {
         SETCONSTANT(DATA_FLOAT32)
         SETCONSTANT(DATA_FLOAT64)
         SETCONSTANT(DATA_STRING)
+        SETCONSTANT(DATA_BYTES)
         #undef SETCONSTANT
 
         lua_pop(L, 1);
