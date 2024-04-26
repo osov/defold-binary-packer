@@ -109,6 +109,16 @@ namespace dmBinaryPacker {
         }
     }
 
+    static void PutStringRaw(lua_State *L, int numArg, char *buffer, unsigned int &pos, unsigned int buffer_size) {
+        size_t length = 0;
+        char *str = (char *) luaL_checklstring(L, numArg, &length);
+        //PutLength(length, buffer, pos, buffer_size);
+        if (length > 0 && CanWriteIntoBuffer(buffer_size, pos, length)) {
+            memcpy(&buffer[pos], str, length);
+            pos += length;
+        }
+    }
+
     static void PutStruct(lua_State *L, int numArg, int structId, char *buffer, unsigned int &pos,
                           unsigned int buffer_size) {
         luaL_checktype(L, numArg, LUA_TTABLE);
@@ -171,6 +181,9 @@ namespace dmBinaryPacker {
                 break;
             case DATA_STRING:
                 PutString(L, numArg, buf, pos, buffer_size);
+                break;
+            case DATA_BYTES:
+                PutStringRaw(L, numArg, buf, pos, buffer_size);
                 break;
             default:
                 if (dataId >= 0) PutStruct(L, numArg, dataId, buf, pos, buffer_size);

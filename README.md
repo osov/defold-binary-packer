@@ -12,6 +12,7 @@
 - DATA_FLOAT32
 - DATA_FLOAT64
 - DATA_STRING
+- DATA_BYTES
 
 ### function register_structs(structs)
 

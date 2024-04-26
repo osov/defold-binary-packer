@@ -39,7 +39,8 @@ namespace dmBinaryPacker {
         DATA_INT64 = -7,
         DATA_FLOAT32 = -8,
         DATA_FLOAT64 = -9,
-        DATA_STRING = -10
+        DATA_STRING = -10,
+        DATA_BYTES = -11,
     };
 
     static void PutDataFromStackIntoBuffer(lua_State *L, int numArg, int dataId, char *buf, unsigned int &pos,

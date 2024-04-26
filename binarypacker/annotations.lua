@@ -22,6 +22,7 @@
 ---@field DATA_FLOAT32 number Тип данных 32 битное число с плавающей запятой
 ---@field DATA_FLOAT64 number Тип данных 64 битное число с плавающей запятой
 ---@field DATA_STRING number Тип данных строка
+---@field DATA_BYTES number Тип данных строка(любой набор данных)
 ---@field register_structs fun(struct: binarypacker_struct[]) Массив с описанием структур
 ---@field create_write_buffer fun(size: number) Создать буфер для записи
 ---@field put_data fun(data_id: number, data: any) Поместить данные в буфер записи
